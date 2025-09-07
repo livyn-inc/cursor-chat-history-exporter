@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+test_venv/
+.cache/
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# Local outputs
+@chat_history/
+Flow/
+logs/
+processed/
+backup/
+backups/
+
+# IDE
+.idea/
+.vscode/
+
+# Env
+.env
+.env.*
