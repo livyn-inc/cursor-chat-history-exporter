@@ -236,3 +236,33 @@ AIPM システムの詳細については、システム管理者にお問い合
 - スクリプトは読み取り専用でDBを開く設計ですが、OSや環境差異によりロック・一時ファイル生成等の挙動が異なることがあります。長時間の実行や大量エクスポート時は十分な空き容量を確保してください。
 - エクスポート結果をFlow等へ移動するスクリプトはファイルの移動・削除を行います。実行前にパスと対象を必ず確認し、テスト用ディレクトリで動作検証してから本運用へ適用してください。
 - 利用に伴ういかなる損害についても、作者・提供者は一切の責任を負いません。自己責任でご利用ください。
+
+## Commands（Cursor コマンド連携）
+
+本ツールは Cursor の Commands 機能と連携して、日次同期をノーコードで実行できます。
+
+### 配置場所
+- Dev 直下に `.cursor/commands/chat-history-update.md` を同梱しています（config は空欄）
+- AIPM ワークスペース標準の場所は `/.cursor/commands/general/chat-history-update.md` です
+
+### 初期設定（はじめて使う場合）
+1. `.cursor/commands/chat-history-update.md` を AIPM ルート配下の `/.cursor/commands/` にコピー
+2. 開いたファイルの `config` セクションを環境に合わせて設定（空欄のままでも Preflight が自動検出可能）
+   - `workspace`: ワークスペースの絶対パス（例: `/Users/you/your_repo`）
+   - `repo_rel`: 本ツールの `Dev/src` への相対パス（例: `Stock/programs/Tools/projects/cursor_chat_history_exporter/Dev/src`）
+   - `flow_rel`: Flow ルート相対パス（例: `Flow`）
+   - `out_rel`: スタンドアロン出力先（例: `@chat_history`）
+   - `db_path`: Cursor の DB パス（未設定可。OS別既定: `~/Library/Application Support/Cursor/User/globalStorage/state.vscdb` 等）
+
+### 使い方（Commands 実行）
+- コマンド名: 「チャット履歴更新（Flow自動同期）」
+- 推奨手順:
+  1) Preflight を実行（config 未設定時の自動検出＆検証）
+  2) quick_run を実行（昨日分の再生成＋直近7日の不足分補完）
+  3) 必要に応じて「昨日のみ」「本日」「指定日」「直近N日」「日付範囲」を実行
+
+### 備考
+- config が空欄でも quick_run は自動検出で動作可能
+- macOS の `date -v` 使用（Linux は `date -d` へ読み替え）
+- 生成先（AIPM モード）: `Flow/YYYYMM/YYYY-MM-DD/chats/`
+- 生成先（スタンドアロン）: `@chat_history/YYYY-MM-DD_/...`
